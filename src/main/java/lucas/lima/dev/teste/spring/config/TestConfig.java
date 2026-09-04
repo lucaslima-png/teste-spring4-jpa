@@ -1,14 +1,8 @@
 package lucas.lima.dev.teste.spring.config;
 
-import lucas.lima.dev.teste.spring.entites.Category;
-import lucas.lima.dev.teste.spring.entites.Order;
-import lucas.lima.dev.teste.spring.entites.Product;
-import lucas.lima.dev.teste.spring.entites.User;
+import lucas.lima.dev.teste.spring.entites.*;
 import lucas.lima.dev.teste.spring.entities.enums.OrderStatus;
-import lucas.lima.dev.teste.spring.repositories.CategoryRepository;
-import lucas.lima.dev.teste.spring.repositories.OrderRepository;
-import lucas.lima.dev.teste.spring.repositories.ProductRepository;
-import lucas.lima.dev.teste.spring.repositories.UserRepository;
+import lucas.lima.dev.teste.spring.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +26,9 @@ public class TestConfig implements CommandLineRunner {
 
     @Autowired
     private ProductRepository pruductRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -65,9 +62,15 @@ public class TestConfig implements CommandLineRunner {
         Order o2 = new Order(Instant.parse("2019-07-21T03:42:10Z"),OrderStatus.Waiting_Payment, u2, null);
         Order o3 = new Order(Instant.parse("2019-07-22T15:21:22Z"),OrderStatus.Waiting_Payment,  u1, null);
 
-
         userRepository.saveAll(Arrays.asList(u1, u2));
         orderRepository.saveAll(Arrays.asList(o1, o2, o3));
+
+        OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+        OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
+        OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
+        OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
+
+        orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
 
     }
 }
