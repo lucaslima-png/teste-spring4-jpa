@@ -1,5 +1,6 @@
 package lucas.lima.dev.teste.spring.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import lucas.lima.dev.teste.spring.entites.User;
 import lucas.lima.dev.teste.spring.repositories.UserRepository;
 import lucas.lima.dev.teste.spring.services.excepions.DatabaseException;
@@ -42,10 +43,14 @@ public class UserService {
 
     }
 
-    public User update(Long id, User obj){
-        User entity = repository.getReferenceById(id);
-        updateDate(entity, obj);
-        return repository.save(entity);
+    public User update(Long id, User obj) {
+        try {
+            User entity = repository.getReferenceById(id);
+            updateDate(entity, obj);
+            return repository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFountException(id);
+        }
     }
 
     private void updateDate(User entity, User obj) {
