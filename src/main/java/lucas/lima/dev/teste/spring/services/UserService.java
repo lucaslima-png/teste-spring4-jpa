@@ -2,8 +2,11 @@ package lucas.lima.dev.teste.spring.services;
 
 import lucas.lima.dev.teste.spring.entites.User;
 import lucas.lima.dev.teste.spring.repositories.UserRepository;
+import lucas.lima.dev.teste.spring.services.excepions.DatabaseException;
 import lucas.lima.dev.teste.spring.services.excepions.ResourceNotFountException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +32,14 @@ public class UserService {
     }
 
     public void delete(Long id){
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e){
+            throw new ResourceNotFountException(id);
+        } catch (DataIntegrityViolationException e){
+            throw new DatabaseException(e.getMessage());
+        }
+
     }
 
     public User update(Long id, User obj){
