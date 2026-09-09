@@ -2,6 +2,7 @@ package lucas.lima.dev.teste.spring.services;
 
 import lucas.lima.dev.teste.spring.entites.User;
 import lucas.lima.dev.teste.spring.repositories.UserRepository;
+import lucas.lima.dev.teste.spring.services.excepions.ResourceNotFountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class UserService {
 
     public User findById(Long id){
         Optional<User> obj= repository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(() ->new ResourceNotFountException(id));
     }
 
     public User insert(User obj){
